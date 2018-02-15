@@ -9,6 +9,8 @@ defmodule Bip39Haiku.Wordnik do
       %HTTPotion.Response{status_code: 200, body: body} ->
         body
         |> Poison.decode!()
+        |> Enum.map(& &1["seq"])
+        |> Enum.uniq()
         |> length
 
       _ ->
