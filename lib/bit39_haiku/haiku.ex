@@ -1,6 +1,10 @@
 defmodule Bip39Haiku.Haiku do
   def is_valid?(wordlist) do
-    IO.ANSI.format([:black, :bright, "Checking \"#{Enum.join(wordlist, " ")}\"..."])
+    IO.ANSI.format([
+      :black,
+      :bright,
+      "Checking \"#{Enum.join(wordlist, " ")}\"..."
+    ])
     |> IO.puts()
 
     wordlist = attach_syllables(wordlist)
@@ -16,22 +20,34 @@ defmodule Bip39Haiku.Haiku do
 
   defp attach_syllables(wordlist) do
     wordlist
-    |> Enum.map(&Task.async(fn -> {&1, Bip39Haiku.Wordnik.get_syllables(&1)} end))
+    |> Enum.map(
+      &Task.async(fn ->
+        {&1, Bip39Haiku.Wordnik.get_syllables(&1)}
+      end)
+    )
     |> Enum.map(&Task.await/1)
   end
 
-  def drop_syllables(wordlist, syllables) do
+  def drop_syllables(
+        wordlist,
+        syllables
+      ) do
     total_syllables =
       wordlist
-      |> Enum.scan(0, fn {word, syllables}, total -> total + syllables end)
+      |> Enum.scan(0, fn {word, syllables}, total ->
+        total + syllables
+      end)
 
     index =
       total_syllables
       |> Enum.find_index(&(&1 == syllables))
 
     case index do
-      nil -> {:error, :not_possible}
-      index -> {:ok, Enum.drop(wordlist, index + 1)}
+      nil ->
+        {:error, :not_possible}
+
+      index ->
+        {:ok, Enum.drop(wordlist, index + 1)}
     end
   end
 end

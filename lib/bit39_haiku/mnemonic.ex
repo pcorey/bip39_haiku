@@ -15,11 +15,16 @@ defmodule Bip39Haiku.Mnemonic do
       |> div(4)
 
     <<checksum::bits-size(size), _::bits>> = :crypto.hash(:sha256, base)
+
     <<base::bits, checksum::bits>>
   end
 
   defp map_onto_wordlist(bytes) do
-    wordlist = Application.fetch_env!(:bip39_haiku, :wordlist)
+    wordlist =
+      Application.fetch_env!(
+        :bip39_haiku,
+        :wordlist
+      )
 
     for <<chunk::11 <- bytes>> do
       Enum.at(wordlist, chunk)

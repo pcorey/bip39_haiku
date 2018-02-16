@@ -4,7 +4,8 @@ use Mix.Config
 
 config :bip39_haiku,
   wordnik_api_key:
-    System.get_env("WORDNIK_API_KEY") || "a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
+    System.get_env("WORDNIK_API_KEY") ||
+      "a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
 
 config :bip39_haiku, wordlist: ~w[
   abandon
