@@ -9,7 +9,8 @@ defmodule Bip39Haiku.Haiku do
 
     wordlist = attach_syllables(wordlist)
 
-    with {:ok, wordlist} <- drop_syllables(wordlist, 5),
+    with nil <- Enum.find(wordlist, &zero_syllables?/1),
+         {:ok, wordlist} <- drop_syllables(wordlist, 5),
          {:ok, wordlist} <- drop_syllables(wordlist, 7),
          {:ok, wordlist} <- drop_syllables(wordlist, 5) do
       Enum.empty?(wordlist)
@@ -17,6 +18,9 @@ defmodule Bip39Haiku.Haiku do
       _ -> false
     end
   end
+
+  defp zero_syllables?({_, 0}), do: true
+  defp zero_syllables?({_, _}), do: false
 
   defp attach_syllables(wordlist) do
     wordlist

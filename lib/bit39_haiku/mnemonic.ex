@@ -1,22 +1,26 @@
 defmodule Bip39Haiku.Mnemonic do
   def generate do
-    entropy |> map_onto_wordlist
+    entropy
+    |> attach_checksum
+    |> map_onto_wordlist
   end
 
   defp entropy do
-    base =
-      :crypto.rand_uniform(8, 16)
-      |> :crypto.strong_rand_bytes()
+    :crypto.rand_uniform(16, 32 + 1)
+    |> :crypto.strong_rand_bytes()
+  end
+
+  defp attach_checksum(entropy) do
+    hash = :crypto.hash(:sha256, entropy)
 
     size =
-      base
-      |> :erlang.binary_to_list()
-      |> length
-      |> div(4)
+      entropy
+      |> bit_size
+      |> div(32)
 
-    <<checksum::bits-size(size), _::bits>> = :crypto.hash(:sha256, base)
+    <<checksum::bits-size(size), _::bits>> = hash
 
-    <<base::bits, checksum::bits>>
+    <<entropy::bits, checksum::bits>>
   end
 
   defp map_onto_wordlist(bytes) do
