@@ -32,10 +32,7 @@ defmodule Bip39Haiku.Haiku do
     |> Enum.map(&Task.await(&1, :infinity))
   end
 
-  def drop_syllables(
-        wordlist,
-        syllables
-      ) do
+  def drop_syllables(wordlist, syllables) do
     total_syllables =
       wordlist
       |> Enum.scan(0, fn {word, syllables}, total ->

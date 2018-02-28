@@ -16,14 +16,18 @@ defmodule Bip39Haiku.Wordnik do
         status_code: 200,
         body: body
       } ->
-        body
-        |> Poison.decode!()
-        |> Enum.map(& &1["seq"])
-        |> Enum.uniq()
-        |> length
+        parse_response(body)
 
       _ ->
         get_syllables(word)
     end
+  end
+
+  defp parse_response(body) do
+    body
+    |> Poison.decode!()
+    |> Enum.map(& &1["seq"])
+    |> Enum.uniq()
+    |> length
   end
 end
