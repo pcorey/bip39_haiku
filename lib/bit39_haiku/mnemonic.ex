@@ -23,14 +23,14 @@ defmodule Bip39Haiku.Mnemonic do
     <<entropy::bits, checksum::bits>>
   end
 
-  defp map_onto_wordlist(bytes) do
+  defp map_onto_wordlist(entropy) do
     wordlist =
       Application.fetch_env!(
         :bip39_haiku,
         :wordlist
       )
 
-    for <<chunk::11 <- bytes>> do
+    for <<chunk::11 <- entropy>> do
       Enum.at(wordlist, chunk)
     end
   end

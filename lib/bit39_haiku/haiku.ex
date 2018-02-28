@@ -29,7 +29,7 @@ defmodule Bip39Haiku.Haiku do
         {&1, Bip39Haiku.Wordnik.get_syllables(&1)}
       end)
     )
-    |> Enum.map(&Task.await/1)
+    |> Enum.map(&Task.await(&1, :infinity))
   end
 
   def drop_syllables(
